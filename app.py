@@ -114,6 +114,46 @@ fig_corr = go.Figure(
     )
 )
 
+# proposals per party
+proposers={}
+ps_x=[]
+ps_y=[]
+party_list={}
+r3=request.urlopen('https://raw.githubusercontent.com/founting/votes/master/Party_list.csv')
+lines=r3.readlines()
+for line in lines[1:]:
+    line_data=line.decode('utf-8').split(',')
+    party_list[line_data[0]]=line_data[1].strip('\r\n')
+
+r2=request.urlopen('https://raw.githubusercontent.com/founting/votes/master/proposals.csv')
+lines=r2.readlines()
+for line in lines[1:]:
+    line_data=line.decode('utf-8').split(',')
+    for j in range(4,len(line_data),2):
+        proposer=line_data[j][1:]
+        proposer=proposer.strip('\n')
+        for key in party_list:
+            if key.lower() in proposer.lower():
+                if party_list[key] not in proposers:
+                    proposers[party_list[key]]=1
+                else:
+                    proposers[party_list[key]]+=1
+                break
+for key in proposers:
+    ps_x.append(key)
+    ps_y.append(proposers[key])
+#plot fig5
+fig_ps=go.Figure(
+    data=[
+        go.Bar(x=ps_x, y=ps_y,marker_color='#82CDBD')],
+    layout=go.Layout(
+        title=dict(text='Number of proposals per party',x=0.5),
+        yaxis=dict(gridcolor='#EEEEEE',zerolinecolor='#EEEEEE',tickformat='d',dtick=200),
+        plot_bgcolor='#FFFFFF',
+        bargap=0.6,
+    )
+)
+
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -125,7 +165,7 @@ app.layout = html.Div(children=[
     html.H1(children='Votes inside the Dutch Parliament',
             style={'width':'99%','height':30,'fontSize': 20,'color':'#FFFFFF',
             'paddingLeft':'1.5%','paddingTop':5,'backgroundColor':'#363880'}),
-
+    
     html.Div([
         dcc.Graph(id='fig_td',figure=fig_td)],
         style={'width':'47%','marginTop':10,'marginLeft':'2%','display':'inline-block','vertical-align':'top'}),
@@ -141,11 +181,15 @@ app.layout = html.Div(children=[
             value='Housing',
             style={'height':37}),
         dcc.Graph(id='fig_pv')],
-        style={'width':'47%','marginTop':25,'marginBottom':25,'marginLeft':'2%','display':'inline-block','vertical-align':'top'}),
+        style={'width':'47%','marginTop':25,'marginLeft':'2%','display':'inline-block','vertical-align':'top'}),
    
     html.Div([
         dcc.Graph(id='fig_pro',figure = fig_pro)],
-        style={'width': '47%','marginTop':25,'marginBottom':25,'marginLeft':'2%','marginRight':'2%','display': 'inline-block','vertical-align':'top'}),
+        style={'width': '47%','marginTop':25,'marginLeft':'2%','marginRight':'2%','display': 'inline-block','vertical-align':'top'}),
+
+    html.Div([
+        dcc.Graph(id='fig_ps',figure=fig_ps)],
+        style={'width':'96%','height':470,'marginTop':25,'marginBottom':15,'marginLeft':'2%','marginRight':'2%'})
 ],   
     style={'backgroundColor':'#F6F6F6'})
 
