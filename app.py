@@ -83,7 +83,7 @@ fig_PVs={}
 for t in topics:
     fig_PVs[t]=go.Figure(
         data=[
-            go.Bar(y=pvotes.columns, x=pvotes.loc[t,'support'].values, name='in front of',orientation='h',marker_color='#A6C4FE'),
+            go.Bar(y=pvotes.columns, x=pvotes.loc[t,'support'].values, name='in favour of',orientation='h',marker_color='#A6C4FE'),
             go.Bar(y=pvotes.columns, x=pvotes.loc[t,'against'].values, name='against', orientation='h',marker_color='#DDDDDD')],
         layout=go.Layout(
             title=dict(text='Voting result regarding '+ str(t)+' topic',x=0.5),
