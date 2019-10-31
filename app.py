@@ -69,7 +69,7 @@ for p in propose.index:
 fig_pro=go.Figure(
     data=traces,
     layout=go.Layout(
-        title=dict(text='Topic distribution of motions proposed by various parties',x=0.5),
+        title=dict(text='Topic distribution of proposals of parties',x=0.5),
         polar=dict(radialaxis=dict(range=[0,2.1],gridcolor='#C6C6C6',tickformat='d'),
                     angularaxis=dict(gridcolor='#C6C6C6'),bgcolor='#FFFFFF'),
         height=487
